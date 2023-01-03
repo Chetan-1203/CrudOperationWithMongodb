@@ -16,6 +16,52 @@ namespace CrudOperationWithMongodb.DataAccessLayer
             _mongoCollection = _MongoDatabase.GetCollection<InsertRecordRequest>(_configuration["Database:CollectionName"]);
         }
 
+        public async Task<GetAllRecordResponse> GetAllRecord()
+        {
+            GetAllRecordResponse response = new GetAllRecordResponse();
+            response.IsSuccess = true;
+            response.Message = "Data fetch successfully ";
+          
+            try
+            {
+                response.data = new List<InsertRecordRequest>();
+                response.data = await _mongoCollection.Find(req => true).ToListAsync();
+                if (response.data.Count == 0)
+                {
+                    response.Message = "No Record Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "exception occurs" + ex.Message;
+            }
+
+            return response;    
+        }
+
+        public async Task<GetRecordByIdResponse> GetRecordById(string id)
+        {
+            GetRecordByIdResponse response = new GetRecordByIdResponse();
+            response.IsSuccess = true;
+            response.Message = "Data fetch successfully ";
+            try
+            {
+                response.data = await  _mongoCollection.Find(req => req.Id == id).FirstOrDefaultAsync();
+                if (response.data is null)
+                {
+                    response.Message = "No Record Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "exception occurs" + ex.Message;
+            }
+
+            return response;
+        }
+
         public async Task<InsertRecordresponse> InsertRecord(InsertRecordRequest request)
         {    
               InsertRecordresponse response = new InsertRecordresponse();
@@ -28,6 +74,41 @@ namespace CrudOperationWithMongodb.DataAccessLayer
                 await _mongoCollection.InsertOneAsync(request);
             }
             catch(Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "exception occurs" + ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<UpdateRecordIdByResponse> UpdateRecordById(InsertRecordRequest request)
+        {
+            UpdateRecordIdByResponse response = new UpdateRecordIdByResponse();
+            response.IsSuccess = true;
+            response.Message = "Data updated successfully ";
+            try
+            {
+                GetRecordByIdResponse record = await  GetRecordById(request.Id);
+                
+                
+                    request.CreatedDate = record.data.CreatedDate;
+                    request.UpdatedDate = DateTime.Now.ToString();
+                    var result = await _mongoCollection.ReplaceOneAsync(req => req.Id == request.Id, request);
+
+                    if (!result.IsAcknowledged)
+                    {
+                        response.Message = "Input Id not found";
+                    }
+                
+
+               
+
+                
+            }
+
+
+            catch (Exception ex)
             {
                 response.IsSuccess = false;
                 response.Message = "exception occurs" + ex.Message;

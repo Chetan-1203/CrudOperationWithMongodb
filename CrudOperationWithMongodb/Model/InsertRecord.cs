@@ -42,7 +42,7 @@ namespace CrudOperationWithMongodb.Model
         public bool IsSuccess { get; set; }
 
         public string Message { get; set; }
-         #pragma warning restore CS8618
+#pragma warning restore CS8618
     }
 }
 

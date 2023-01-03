@@ -16,7 +16,7 @@ namespace CrudOperationWithMongodb.Controllers
             _crudOperationDL = crudOperationDL;
         }
         [HttpPost]
-        public async Task<IActionResult> Insert( InsertRecordRequest request) 
+        public async Task<IActionResult> InsertRecord( InsertRecordRequest request) 
         {
             InsertRecordresponse response = new InsertRecordresponse();
 
@@ -28,6 +28,59 @@ namespace CrudOperationWithMongodb.Controllers
             {
                 response.IsSuccess = false;
                 response.Message  = "exception occurs" + ex.Message;
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllRecord ()
+        {
+            GetAllRecordResponse response = new GetAllRecordResponse();
+
+            try
+            {
+                response = await _crudOperationDL.GetAllRecord();
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "exception occurs" + ex.Message;
+            }
+
+            return Ok(response);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetRecordById([FromQuery]string Id)
+        {
+            GetRecordByIdResponse response = new GetRecordByIdResponse();
+
+            try
+            {
+                response = await _crudOperationDL.GetRecordById(Id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "exception occurs" + ex.Message;
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateRecordById(InsertRecordRequest request)
+        {
+            UpdateRecordIdByResponse response = new UpdateRecordIdByResponse();
+
+            try
+            {
+                response = await _crudOperationDL.UpdateRecordById(request);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "exception occurs" + ex.Message;
             }
 
             return Ok(response);
