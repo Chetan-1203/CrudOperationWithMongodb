@@ -85,5 +85,24 @@ namespace CrudOperationWithMongodb.Controllers
 
             return Ok(response);
         }
+
+        [HttpDelete]
+       
+        public async Task<IActionResult> DeleteRecordById(DeleteRecordByIdRequest request)
+        {
+            DeleteRecordByIdResponse response = new DeleteRecordByIdResponse();
+
+            try
+            {
+                response = await _crudOperationDL.DeleteRecordById(request);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "exception occurs" + ex.Message;
+            }
+
+            return Ok(response);
+        }
     }
 }

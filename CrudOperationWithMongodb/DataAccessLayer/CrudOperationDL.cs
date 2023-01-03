@@ -116,5 +116,31 @@ namespace CrudOperationWithMongodb.DataAccessLayer
 
             return response;
         }
+
+        public async  Task<DeleteRecordByIdResponse> DeleteRecordById(DeleteRecordByIdRequest request)
+        {
+           DeleteRecordByIdResponse response = new DeleteRecordByIdResponse();
+            response.IsSuccess = true;
+            response.Message = "Delete record successfully ";
+            try
+            {
+
+               var result = await _mongoCollection.DeleteOneAsync(req => req.Id == request.Id);
+                if (!result.IsAcknowledged)
+                {
+                    response.Message = "Input Id not found";
+                }
+
+            }
+
+
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "exception occurs" + ex.Message;
+            }
+
+            return response;
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace CrudOperationWithMongodb.DataAccessLayer
 
         public Task<GetRecordByIdResponse>GetRecordById(string id);
 
-        public Task<UpdateRecordIdByResponse> UpdateRecordById(InsertRecordRequest request);    
+        public Task<UpdateRecordIdByResponse> UpdateRecordById(InsertRecordRequest request);
+        public Task<DeleteRecordByIdResponse> DeleteRecordById(DeleteRecordByIdRequest request);
     }
 }
